@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write articles"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "zenn-cli": "^0.1.142"
+  },
+  "devDependencies": {
+    "prettier": "3.0.0-alpha.6"
   }
 }
