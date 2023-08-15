@@ -341,4 +341,4 @@ export const fileupload = onRequest({ timeoutSeconds: 300, cors: true }, (req, r
 - Flutterではhttpパッケージを使用してmultipart/form-data形式でデータを送信しました。
 - Firebase Functionsではbusboyパッケージを使用してmultipart/form-dataを取り扱い、受け取ったファイルをFirebase Storageにストリームでアップロードしました。
 
-FlutterとFirebaseを組み合わせたアプリ開発におけるファイルアップロードの実装方法について参考になれば幸いです。
+FlutterとFirebaseを組み合わせたアプリ開発を行っている方の、ファイルアップロード実装の参考になれば幸いです。
