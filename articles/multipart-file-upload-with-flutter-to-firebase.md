@@ -6,7 +6,7 @@ topics: ["flutter", "firebase", "googlecloud", "html", "個人開発"]
 published: true
 ---
 
-# FlutterとFirebaseの組み合わせについて
+# 背景
 
 FlutterとFirebaseを用いたアプリ開発は現在ではよくある構成かと思いますが、私も同じ構成でアプリを開発しています。
 アプリの機能としてユーザーからファイルのアップロードを受け付ける必要があり、その際にFirebase Storageを利用することにしました。
