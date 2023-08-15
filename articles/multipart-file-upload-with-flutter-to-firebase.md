@@ -291,8 +291,8 @@ async function streamFileUpload() {
 
 https://cloud.google.com/storage/docs/streaming-uploads?hl=ja#storage-stream-upload-object-nodejs
 
-上記の通り、busboyで受け取ったファイルを、Firebase Storageにそのままストリームでアップロードすることが可能です。
-これにより、一時ファイルの使用や余計なメモリの消費を避けつつ、効率的にファイルをアップロードすることができます。
+これらを組み合わせて、busboyで受け取ったファイルを、Firebase Storageにそのままストリームでアップロードすることが可能です。
+一時ファイルの使用や余計なメモリの消費を避けつつ、効率的にファイルをアップロードすることができます。
 
 Firebase のドキュメントでも言及されているので、基本的にはこの実装が良さそうです。
 
