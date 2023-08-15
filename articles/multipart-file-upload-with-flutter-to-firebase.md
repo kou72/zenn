@@ -240,13 +240,11 @@ https://github.com/flutter/flutter/issues/98208
 
 ## 必要なパッケージ
 
-Firebase Functionsでmultipart/form-dataを取り扱う際、busboyというパッケージを使用しま
-
 Firebase Functions で multipart/form-data を取り扱う際 [busboy](https://www.npmjs.com/package/busboy) というパッケージを使用します。
-他にも類似するパッケージとして [Formidable](https://www.npmjs.com/package/formidable) 、[Multer](https://www.npmjs.com/package/multer) 、[Multiparty](https://www.npmjs.com/package/multiparty) などがありますが、これらは現在サポートされていないようです。
+他にも類似するパッケージとして [Formidable](https://www.npmjs.com/package/formidable) 、[Multer](https://www.npmjs.com/package/multer) 、[Multiparty](https://www.npmjs.com/package/multiparty) などがありますが、これらは Cloud Functions では現在サポートされていないようです。
 （[公式ドキュメント](https://cloud.google.com/functions/docs/samples/functions-http-form-data?hl=ja)では busboy が使われている & 報告記事多数）
 
-こちらの記事が分かりやすいですが、中間ファイルの利用するかどうかが関係してそうです。
+こちらの記事が分かりやすいですが、中間ファイルの利用するものは利用できないようです。
 
 https://bytearcher.com/articles/formidable-vs-busboy-vs-multer-vs-multiparty/
 
