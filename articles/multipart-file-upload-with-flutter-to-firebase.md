@@ -3,7 +3,7 @@ title: "Flutter から Firebase Functions へ multipart/form-data でファイ�
 emoji: "📮"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["flutter", "firebase", "googlecloud", "html", "個人開発"]
-published: false
+published: true
 ---
 
 # FlutterとFirebaseの組み合わせについて
@@ -15,6 +15,15 @@ FlutterとFirebaseを用いたアプリ開発は現在ではよくある構成�
 クライアントへの認証情報の埋め込みはセキュリティ上のリスクがあるため、Firebase Functionsを経由してファイルのアップロードを実施することにしました。
 
 ![](https://raw.githubusercontent.com/kou72/zenn/main/image/flutter-request-pattern.png)
+
+# 開発環境
+
+- Flutter
+  - ver 3.10.6
+  - Flutter for Web のみ利用
+- Firebase Functions
+  - node 18
+  - typescript で実装
 
 # ファイルアップロード方法について
 
@@ -79,7 +88,7 @@ Content-Length: 4323
 受け取り側は、boundaryをもとにデータを分割し、中身を取り出す必要があります。
 そのため、データを正確に取得するためには、送信側と受信側の双方でmultipart/form-data用のライブラリの利用が必須です。
 
-# Flutter から multipart/form-data でファイルをアップロードする
+# Flutter で multipart/form-data を活用したファイルアップロード
 
 ## 利用パッケージ
 
@@ -107,12 +116,12 @@ https://medium.com/@vikranthsalian/flutter-dio-vs-http-1dc1d4f95fda
 
 ([記事](https://medium.com/@vikranthsalian/flutter-dio-vs-http-1dc1d4f95fda)からの引用をChat-GPTにより和訳)
 
-今回はhttpで実装後、必要であればdioに切り替える方針とした。
-本記事の範囲ではhttpで十分に実装できた。
+今回の実装では、初めにhttpを使用し、後に必要があればdioに切り替えることにしました。
+この記事ではhttpのみで十分な実装ができました。
 
-## 実装
+## 実装方法
 
-Flutter側の実装は以下のようになる。
+Flutterでの実装例は以下の通りです。
 
 ```dart
 import 'dart:typed_data';
@@ -180,7 +189,7 @@ class ScreenState extends State<Screen> {
 }
 ```
 
-`_fileupload` 中の以下の部分がhttpを使ってmultipart/form-dataで送信するデータを組み立てている処理になる。
+この中で、`_fileupload` の部分が `http` を使用して、multipart/form-data形式でデータを送信する処理です。
 
 ```dart
 final req = http.MultipartRequest('POST', url);
@@ -194,31 +203,29 @@ req.files.add(
 req.send();
 ```
 
-上のmultipart/form-dataのbodyの例と見比べるとイメージしやすくなると思う。
-`http.MultipartRequest` で空のリクエストを作成後、 `req.files.add` でファイルのデータを追加している。
+このコードを、前述のmultipart/form-dataのbodyの例と比較すると、データの組み立て方がよくわかるかと思います。
+`http.MultipartRequest` で新しいリクエストを作成し、その後 `req.files.add` でファイルデータを追加しています。
 
-各パラメータの意味は以下の通り。
+各パラメータの詳細は以下の通りです。
 
 - **(第1引数): 'file'**
-  - データのnameを指定している
+  - これはデータのname属性を指定する部分です。
 - **(第2引数): \_pickedFileBytes!**
-  - バイナリデータをセットしている
+  - 実際のファイルデータ（バイナリデータ）を指定する部分です。
 - **filename: \_pickedFileName!**
-  - オプションで設定できるファイルの名前
-
-詳細は[公式ドキュメント](https://pub.dev/documentation/http/latest/http/MultipartFile/MultipartFile.fromBytes.html)を参照。
+  - アップロードするファイルの名前を指定する部分です。
+  - 詳細は[公式ドキュメント](https://pub.dev/documentation/http/latest/http/MultipartFile/MultipartFile.fromBytes.html)を参照してください。
 
 ## 注意
 
-開発中以下のエラーが発生した。
+開発中、以下のエラーが発生しました。
 
 ```bash
 Error: Unsupported operation: MultipartFile is only
 supported where dart:io is available.
 ```
 
-これは `http.MultipartFile.fromPath` メソッドを利用していたことで発生したものであった。
-Flutter for Web では `http.MultipartFile.fromPath` が使えないようである。
+原因は `http.MultipartFile.fromPath` メソッドを使用していたためで、Flutter for Webではこのメソッドは利用できないようです。
 
 https://github.com/flutter/flutter/issues/98208
 
@@ -227,14 +234,16 @@ https://github.com/flutter/flutter/issues/98208
 
 ([記事](https://github.com/flutter/flutter/issues/98208)からの引用をChat-GPTにより和訳)
 
-ここでは `http.MultipartFile.fromBytes` を利用することで解決した。
+ここでは代わりに `http.MultipartFile.fromBytes` を利用することとしました。
 
-# Firebase Functions で multipart/form-data を受け取る
+# Firebase Functionsでのmultipart/form-dataの取り扱い
 
-## 利用パッケージ
+## 必要なパッケージ
 
-Firebase Functions で multipart/form-data を受け取るときには [busboy](https://www.npmjs.com/package/busboy) を利用する。
-他に類似のライブラリとして [Formidable](https://www.npmjs.com/package/formidable) 、[Multer](https://www.npmjs.com/package/multer) 、[Multiparty](https://www.npmjs.com/package/multiparty) があるが、非サポートのようです。
+Firebase Functionsでmultipart/form-dataを取り扱う際、busboyというパッケージを使用しま
+
+Firebase Functions で multipart/form-data を取り扱う際 [busboy](https://www.npmjs.com/package/busboy) というパッケージを使用します。
+他にも類似するパッケージとして [Formidable](https://www.npmjs.com/package/formidable) 、[Multer](https://www.npmjs.com/package/multer) 、[Multiparty](https://www.npmjs.com/package/multiparty) などがありますが、これらは現在サポートされていないようです。
 （[公式ドキュメント](https://cloud.google.com/functions/docs/samples/functions-http-form-data?hl=ja)では busboy が使われている & 報告記事多数）
 
 こちらの記事が分かりやすいですが、中間ファイルの利用するかどうかが関係してそうです。
@@ -246,7 +255,7 @@ https://bytearcher.com/articles/formidable-vs-busboy-vs-multer-vs-multiparty/
 
 ## Firebase Strage へのアップロード
 
-busboyはstreamでファイルを受けとることが可能です。
+busboy はファイルをストリーム形式で受け取ることができます。
 
 ```js
 const bb = busboy({ headers: req.headers });
@@ -260,7 +269,7 @@ bb.on("file", (name, file, info) => {
 
 https://github.com/mscdex/busboy#examples
 
-またFirebase Strageにはstreamでファイルをアップロードすることが可能です。
+また、Firebase Storageも同様のストリーム形式でファイルをアップロードすることができます。
 
 ```js
 const stream = require("stream");
@@ -284,8 +293,8 @@ async function streamFileUpload() {
 
 https://cloud.google.com/storage/docs/streaming-uploads?hl=ja#storage-stream-upload-object-nodejs
 
-そのため、busboyで受け取ったファイルをstreamでそのままFirebase Strageにアップロードすることが可能です。
-こうすることで中間ファイルを利用することなく、またメモリ消費することなくファイルアップロードが可能です。
+上記の通り、busboyで受け取ったファイルを、Firebase Storageにそのままストリームでアップロードすることが可能です。
+これにより、一時ファイルの使用や余計なメモリの消費を避けつつ、効率的にファイルをアップロードすることができます。
 
 Firebase のドキュメントでも言及されているので、基本的にはこの実装が良さそうです。
 
@@ -295,9 +304,9 @@ https://firebase.google.com/docs/functions/tips?hl=ja#always_delete_temporary_fi
 >
 > パイプラインを使用して、サイズの大きいファイルを処理する際のメモリ要件を減らすことができます。たとえば、Cloud Storage でファイルを処理するために、読み取りストリームを作成し、これをストリームベースのプロセスに渡してから、出力ストリームを Cloud Storage に直接書き込むことができます。
 
-## 実装
+## 実装方法
 
-Firebase Functions 側の実装は以下のようになる。
+Firebase Functionsでの実装例を以下に示します。
 
 ```js
 import { onRequest } from "firebase-functions/v2/https";
@@ -323,14 +332,15 @@ export const fileupload = onRequest({ timeoutSeconds: 300, cors: true }, (req, r
 });
 ```
 
-`bb.on("file")` でnameがfileのデータに対する処理を記述している。
-`stream`にはファイルのバイナリデータ、`info.filename`にファイル名が入っているため、これらを利用してFirebase Strageにアップロードしている。
+この実装では、`bb.on("file")` 内でファイルデータを取得し、バイナリデータが入っている `stream` と `info.filename` を利用してFirebase Storageにアップロードしています。
 
-アップロードには`stream.pipe(distPath.createWriteStream())`を利用することで、中間ファイルやメモリを介さずにアップロードが可能になる。
+アップロード処理には `stream.pipe(distPath.createWriteStream())` を使用することで、中間ファイルやメモリを挟まず、効率的にファイルを保存することができます。
 
 # まとめ
 
-- RESTful WebAPI でファイルアップロードを行う場合、multipart/form-data を利用が適している。
-- Flutter でファイルアップロードを行う場合、[MultipartRequest](https://api.flutter.dev/flutter/dart-io/MultipartRequest-class.html) を利用する。
-- Firebase Functions でファイルアップロードを行う場合、[busboy](https://www.npmjs.com/package/busboy) を利用する。
-- Firebase Strage へのファイルアップロードは、[stream](https://nodejs.org/api/stream.html) を利用することで中間ファイルやメモリを介さずに行うことが可能である。
+- FlutterとFirebaseを組み合わせたアプリ開発において、クライアントからFirebase Storageへ直接アップロードするとセキュリティリスクがあるため、Firebase Functionsを経由してアップロードを行う方法を検討しました。
+- ファイルアップロード方法としては「multipart/form-data」と「Base64 エンコード」の2つが主流で、今回は前者を採用しました。
+- Flutterではhttpパッケージを使用してmultipart/form-data形式でデータを送信しました。
+- Firebase Functionsではbusboyパッケージを使用してmultipart/form-dataを取り扱い、受け取ったファイルをFirebase Storageにストリームでアップロードしました。
+
+FlutterとFirebaseを組み合わせたアプリ開発におけるファイルアップロードの実装方法について参考になれば幸いです。
