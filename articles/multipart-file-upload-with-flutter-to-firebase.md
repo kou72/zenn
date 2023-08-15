@@ -6,17 +6,20 @@ topics: ["flutter", "firebase", "googlecloud", "html", "個人開発"]
 published: false
 ---
 
-# 1
+# FlutterとFirebaseの組み合わせについて
 
-FlutterとFirebaseを使ったアプリ開発を行っている
-FlutterからFirebase Strageへファイルをアップロードする必要があった。
-Flutter から直接 Firebase Strage へファイルをアップロードするためにはクライアントに認証情報を埋め込む必要がある。
-しかし、クライアントに認証情報を埋め込むのはセキュリティ的に良くないので、Firebase Functions を経由してファイルをアップロードすることにした。
+FlutterとFirebaseを用いたアプリ開発は現在ではよくある構成かと思いますが、私も同じ構成でアプリを開発しています。
+アプリの機能としてユーザーからファイルのアップロードを受け付ける必要があり、その際にFirebase Storageを利用することにしました。
 
-# 2
+しかし、FlutterからFirebase Storageへ直接ファイルをアップロードしようとすると、クライアントに認証情報を埋め込む必要があります。
+クライアントへの認証情報の埋め込みはセキュリティ上のリスクがあるため、Firebase Functionsを経由してファイルのアップロードを実施することにしました。
 
-RESTful WebAPI でファイルをアップロードする場合、主に「multipart/form-data」と「Base64 エンコード」の2つの方法があるようだ。
-この点については以下の記事が参考になる。
+![](https://raw.githubusercontent.com/kou72/zenn/main/image/flutter-request-pattern.png)
+
+# ファイルアップロード方法について
+
+RESTful WebAPI でファイルをアップロードする場合、主に「multipart/form-data」と「Base64 エンコード」の2つの方法があるようです。
+この点については以下の記事が参考になります。
 
 https://qiita.com/mserizawa/items/7f1b9e5077fd3a9d336b
 
@@ -30,14 +33,14 @@ https://qiita.com/mserizawa/items/7f1b9e5077fd3a9d336b
 
 ([記事](https://qiita.com/mserizawa/items/7f1b9e5077fd3a9d336b)から引用)
 
-基本的にはmultipart/form-dataでファイルをアップロードするのが良いように思える。今回はこの方法を採用することにした。
+基本的にはmultipart/form-dataでファイルをアップロードするのが良いように思えたため、今回はこの方法を採用することにしました。
 
-また後述するが、Cloud Strageがストリーミングアップロードに対応しているため、アーキテクチャとも相性が良い。
+また、Cloud Storageがストリーミングアップロードに対応しているため、このアーキテクチャとの相性も良いと考えました。
 
-# multipart/form-data
+# multipart/form-data とは
 
-multipart/form-data では複数のデータをbodyに含めて送信する。
-データの区切りにはContent-Typeで指定されたboundaryと呼ばれる文字列を用いられる。
+multipart/form-dataは、複数のデータをbody部分に含めて送信します。
+データの区切りには、Content-Typeで指定されたboundaryという文字列が使用されます。
 
 **Headers**
 
@@ -73,17 +76,16 @@ Content-Length: 4323
 
 （[tab API](http://tonchidot.github.io/tab-api-docs/api/item/create_new_item.html) の送信サンプルより引用）
 
-また、受領側はboundaryを元にデータを分割して中身を取り出す必要がある。
-
-そのため適当にボディを開いてもデータを取り出すことはできず、送信側、受信側ともにmultipart/form-data用のライブラリを利用する必要がある。
+受け取り側は、boundaryをもとにデータを分割し、中身を取り出す必要があります。
+そのため、データを正確に取得するためには、送信側と受信側の双方でmultipart/form-data用のライブラリの利用が必須です。
 
 # Flutter から multipart/form-data でファイルをアップロードする
 
 ## 利用パッケージ
 
-FlutterでRESTful WebAPIを含めhttpを取り扱うときには、[http](https://pub.dev/packages/http) か [dio](https://pub.dev/packages/dio) を選択して利用することとなる。
+FlutterでRESTful WebAPIを含めhttpを取り扱うときには、[http](https://pub.dev/packages/http) か [dio](https://pub.dev/packages/dio) を選択して利用することとなります。
 
-こちらの記事が比較の参考になる。
+以下の記事で二つのパッケージの比較が紹介されています。
 https://medium.com/@vikranthsalian/flutter-dio-vs-http-1dc1d4f95fda
 
 > ### HTTP
