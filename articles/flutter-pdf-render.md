@@ -102,7 +102,7 @@ PdfDocument docFromData = await PdfDocument.openData(file.bytes);
 final pdfPagesCount = docFromData.pagesCount
 ```
 
-私のアプリでは `_pickPDF()` という関数の中でこんな感じで使っております。
+私のアプリでは `_pickPDF()` というPDFを選択してアップロードする関数の中でこんな感じで使っております。
 
 ```dart
 Future<void> _pickPDF() async {
