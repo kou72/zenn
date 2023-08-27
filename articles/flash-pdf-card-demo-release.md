@@ -1,9 +1,9 @@
 ---
 title: "Flutter × Firebase × ChatGPT で 暗記カードを自動で作るサービスを個人開発しました"
 emoji: "📇"
-type: "tech" # tech: 技術記事 / idea: アイデア
+type: "tech"
 topics: ["flutter", "firebase", "googlecloud", "chatgpt", "個人開発"]
-published: false
+published: true
 ---
 
 ## 作ったサービス
