@@ -6,13 +6,13 @@ topics: ["github", "githubactions", "slack"]
 published: true
 ---
 
-# 結論
+## 結論
 
 こちらのツールをSlackに追加してください。
 
 https://endid.app/
 
-# GitHub Actions の結果を Slack に通知する方法
+## GitHub Actions の結果を Slack に通知する方法
 
 GitHub Actions の結果を Slack に通知する方法はいくつかあります。
 
@@ -39,24 +39,21 @@ Slack App の GitHub アプリは Workflow の通知自体はできるため惜�
 
 https://github.com/integrations/slack/issues/1563
 
-# Endid for GitHub が良い
+## Endid for GitHub が良い
 
 [Endid for GitHub](https://endid.app/) といういい感じのツールを見つけました。
 https://endid.app/
 
-## 導入方法
+### 導入方法
 
 1. Webページの Add to Slack から slack app directory 移動し、お好みのチャンネルにアプリを追加します。
-
-![](https://raw.githubusercontent.com/kou72/zenn/main/image/notify-slack-only-when-github-actions-fail-1.png)
-
-2. Slackに追加されたEndidからGitHub Connectionのボタンを選択して、GitHubアカウントと連携します。
-3. Workflow notificationsを設定します。以下がおすすめです。
+   ![alt](https://raw.githubusercontent.com/kou72/zenn/main/image/notify-slack-only-when-github-actions-fail-1.png)
+1. Slackに追加されたEndidからGitHub Connectionのボタンを選択して、GitHubアカウントと連携します。
+1. Workflow notificationsを設定します。以下がおすすめです。
    - **Channel to receive notifications** : 通知先のチャンネル
    - **Notification on Success** : When State Changesd
    - **Notification on Failure** : Always
-
-![](https://raw.githubusercontent.com/kou72/zenn/main/image/notify-slack-only-when-github-actions-fail-2.png)
+     ![alt](https://raw.githubusercontent.com/kou72/zenn/main/image/notify-slack-only-when-github-actions-fail-2.png)
 
 これで **「失敗したときだけ」** Slackに通知できます（簡単！）
 さらに `Notification on Success : When State Changesd` にしているので、 **「失敗→成功の時」** も通知されます（気が利く！）
@@ -64,10 +61,10 @@ https://endid.app/
 通知のフォーマットはこんな感じのようです。
 カスタマイズは難しそうですが、十分ですね。
 
-![](https://raw.githubusercontent.com/kou72/zenn/main/image/notify-slack-only-when-github-actions-fail-3.png)
+![alt](https://raw.githubusercontent.com/kou72/zenn/main/image/notify-slack-only-when-github-actions-fail-3.png)
 
 注意として無料プランだと Public Repository のみの対応となっています。
 
-# まとめ
+## まとめ
 
 ちょうど欲しかったツールを見つけたので共有しました。

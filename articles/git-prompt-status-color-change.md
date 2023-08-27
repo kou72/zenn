@@ -6,24 +6,24 @@ topics: ["git", "prompt", "zsh"]
 published: true
 ---
 
-# gitのステータスでプロンプトの色を変えたい！
+## gitのステータスでプロンプトの色を変えたい
 
 ↓こんな感じにしたい。(zshを前提とします)
 
-![](https://raw.githubusercontent.com/kou72/zenn/main/image/git-prompt-status-color-change1.png)
+![alt](https://raw.githubusercontent.com/kou72/zenn/main/image/git-prompt-status-color-change1.png)
 
-# git-promptの設定をする
+## git-promptの設定をする
 
 まずはgit-promptを設定します。
 
-**git-prompt.shをインストール**
+### git-prompt.shをインストール
 
 ```bash
 mkdir ~/.zsh
 curl -o ~/.zsh/git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 ```
 
-**zshrc設定**
+### zshrc設定
 
 `.zshrc`
 
@@ -31,7 +31,7 @@ curl -o ~/.zsh/git-prompt.sh https://raw.githubusercontent.com/git/git/master/co
 source ~/.zsh/git-prompt.sh
 ```
 
-# git-promptの必要なオプションを確認する
+## git-promptの必要なオプションを確認する
 
 git-promptのオプションを確認。
 
@@ -58,7 +58,7 @@ GIT_PS1_SHOWUPSTREAM=auto
 setopt PROMPT_SUBST
 ```
 
-# プロンプトの設定をする
+## プロンプトの設定をする
 
 色分けするプロンプトを作成します。
 
@@ -83,7 +83,7 @@ function git_color() {
 PS1='%~ $(git_color)$(__git_ps1 "%s")%f\$ '
 ```
 
-# 好みの設定を追加
+## 好みの設定を追加
 
 あとは好みの設定を追加していきます。
 参考までに私の設定を載せておきます。
@@ -105,7 +105,7 @@ PS1='
 
 これで冒頭の画像のようなプロンプトが作成できました！
 
-# zshrc全体
+## zshrc全体
 
 `.zshrc`
 

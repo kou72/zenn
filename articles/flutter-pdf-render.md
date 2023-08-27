@@ -6,17 +6,17 @@ topics: ["flutter", "個人開発"]
 published: true
 ---
 
-# PDFのページ数を確認したい
+## PDFのページ数を確認したい
 
 Flutterでアプリ開発中、読み込んだPDFのページ数を確認したいだけなのにえらく時間がかかってしまったのでメモ。
 
-# 開発環境
+## 開発環境
 
 - Flutter
   - ver 3.10.6
   - Flutter for Web を利用
 
-# ライブラリがたくさんある
+## ライブラリがたくさんある
 
 PDF系のライブラリがなぜかたくさんあります。
 結論としては [pdfx](https://pub.dev/packages/pdfx) でやりたいことができました。
@@ -36,7 +36,7 @@ PDF系のライブラリがなぜかたくさんあります。
   - [flutter_full_pdf_viewer](https://pub.dev/packages/flutter_full_pdf_viewer)
   - [flutter_pdfview](https://pub.dev/packages/flutter_pdfview)
 
-# ドキュメントが分かりにくい
+## ドキュメントが分かりにくい
 
 私の知識不足もありますが、どのライブラリもドキュメントが分かりにくいと思います。
 利用例をもうちょっと増やしてほしい。。。
@@ -44,7 +44,7 @@ PDF系のライブラリがなぜかたくさんあります。
 [pdfのリファレンス](https://pub.dev/documentation/pdf/latest/pdf/pdf-library.html) など、ちょっと分かりにくい。
 [**pdfx**のリファレンス](https://pub.dev/documentation/pdfx/latest/) は分かりやすいです。
 
-# Flutter for Webでうまくいかないライブラリがある
+## Flutter for Webでうまくいかないライブラリがある
 
 ブラウザは**任意のファイルパスの読み込みをサポートしていない**らしく、ファイルのパスを直接指定するタイプのライブラリは避けることにしました。
 
@@ -57,11 +57,11 @@ https://github.com/flutter/flutter/issues/98208
 
 ([記事](https://github.com/flutter/flutter/issues/98208)からの引用をChat-GPTにより和訳)
 
-# pdfxを使ってみる
+## pdfxを使ってみる
 
 [**pdfx**](https://pub.dev/packages/pdfx)で進めますがいくつか注意があります。
 
-## Webで利用する場合は別途コマンドの実行が必要です。
+### Webで利用する場合は別途コマンドの実行が必要です
 
 Flutter for webで開発している時は `flutter pub run pdfx:install_web` の実行が必要なので忘れないようにしましょう。
 
@@ -69,19 +69,19 @@ Flutter for webで開発している時は `flutter pub run pdfx:install_web` �
 >
 > In your flutter project add the dependency:
 >
-> ```
+> ```bash
 > flutter pub add pdfx
 > ```
 >
 > For web run tool for automatically add pdfjs library (CDN) in index.html:
 >
-> ```
+> ```bash
 > flutter pub run pdfx:install_web
 > ```
 >
 > For windows run tool automatically add override for pdfium version property in CMakeLists.txt file:
 >
-> ```
+> ```bash
 > flutter pub run pdfx:install_windows
 > ```
 
@@ -131,7 +131,7 @@ Future<void> _pickPDF() async {
 }
 ```
 
-# まとめ
+## まとめ
 
 - PDF系のライブラリあり過ぎ & ちょっと使いにくい
 - [**pdfx**](https://pub.dev/packages/pdfx) のドキュメントが分かりやすい！

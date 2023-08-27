@@ -6,7 +6,7 @@ topics: ["flutter", "firebase", "googlecloud", "html", "個人開発"]
 published: true
 ---
 
-# 背景
+## 背景
 
 FlutterとFirebaseを用いたアプリ開発は現在ではよくある構成かと思いますが、私も同じ構成でアプリを開発しています。
 アプリの機能としてユーザーからファイルのアップロードを受け付ける必要があり、その際にFirebase Storageを利用することにしました。
@@ -14,9 +14,9 @@ FlutterとFirebaseを用いたアプリ開発は現在ではよくある構成�
 しかし、FlutterからFirebase Storageへ直接ファイルをアップロードしようとすると、クライアントに認証情報を埋め込む必要があります。
 クライアントへの認証情報の埋め込みはセキュリティ上のリスクがあるため、Firebase Functionsを経由してファイルのアップロードを実施することにしました。
 
-![](https://raw.githubusercontent.com/kou72/zenn/main/image/flutter-request-pattern.png)
+![alt](https://raw.githubusercontent.com/kou72/zenn/main/image/flutter-request-pattern.png)
 
-# 開発環境
+## 開発環境
 
 - Flutter
   - ver 3.10.6
@@ -25,7 +25,7 @@ FlutterとFirebaseを用いたアプリ開発は現在ではよくある構成�
   - node 18
   - typescript で実装
 
-# ファイルアップロード方法について
+## ファイルアップロード方法について
 
 RESTful WebAPI でファイルをアップロードする場合、主に「multipart/form-data」と「Base64 エンコード」の2つの方法があるようです。
 この点については以下の記事が参考になります。
@@ -46,12 +46,12 @@ https://qiita.com/mserizawa/items/7f1b9e5077fd3a9d336b
 
 また、Cloud Storageがストリーミングアップロードに対応しているため、このアーキテクチャとの相性も良いと考えました。
 
-# multipart/form-data とは
+## multipart/form-data とは
 
 multipart/form-dataは、複数のデータをbody部分に含めて送信します。
 データの区切りには、Content-Typeで指定されたboundaryという文字列が使用されます。
 
-**Headers**
+### Headers
 
 ```http
 Host: example.org
@@ -60,7 +60,7 @@ Cookie:
 Origin:
 ```
 
-**Body**
+### Body
 
 ```http
 ------------XnJLe9ZIbbGUYtzPQJ16u1
@@ -88,9 +88,9 @@ Content-Length: 4323
 受け取り側は、boundaryをもとにデータを分割し、中身を取り出す必要があります。
 そのため、データを正確に取得するためには、送信側と受信側の双方でmultipart/form-data用のライブラリの利用が必須です。
 
-# Flutter で multipart/form-data を活用したファイルアップロード
+## Flutter で multipart/form-data を活用したファイルアップロード
 
-## 利用パッケージ
+### 利用パッケージ
 
 FlutterでRESTful WebAPIを含めhttpを取り扱うときには、[http](https://pub.dev/packages/http) か [dio](https://pub.dev/packages/dio) を選択して利用することとなります。
 
@@ -119,7 +119,7 @@ https://medium.com/@vikranthsalian/flutter-dio-vs-http-1dc1d4f95fda
 今回の実装では、初めにhttpを使用し、後に必要があればdioに切り替えることにしました。
 この記事ではhttpのみで十分な実装ができました。
 
-## 実装方法
+### Flutter側 の実装方法
 
 Flutterでの実装例は以下の通りです。
 
@@ -216,7 +216,7 @@ req.send();
   - アップロードするファイルの名前を指定する部分です。
   - 詳細は[公式ドキュメント](https://pub.dev/documentation/http/latest/http/MultipartFile/MultipartFile.fromBytes.html)を参照してください。
 
-## 注意
+### 注意
 
 開発中、以下のエラーが発生しました。
 
@@ -236,9 +236,9 @@ https://github.com/flutter/flutter/issues/98208
 
 ここでは代わりに `http.MultipartFile.fromBytes` を利用することとしました。
 
-# Firebase Functionsでのmultipart/form-dataの取り扱い
+## Firebase Functionsでのmultipart/form-dataの取り扱い
 
-## 必要なパッケージ
+### 必要なパッケージ
 
 Firebase Functions で multipart/form-data を取り扱う際 [busboy](https://www.npmjs.com/package/busboy) というパッケージを使用します。
 他にも類似するパッケージとして [Formidable](https://www.npmjs.com/package/formidable) 、[Multer](https://www.npmjs.com/package/multer) 、[Multiparty](https://www.npmjs.com/package/multiparty) などがありますが、これらは Cloud Functions では現在サポートされていないようです。
@@ -248,10 +248,10 @@ Firebase Functions で multipart/form-data を取り扱う際 [busboy](https://w
 
 https://bytearcher.com/articles/formidable-vs-busboy-vs-multer-vs-multiparty/
 
-![](https://bytearcher.com/articles/formidable-vs-busboy-vs-multer-vs-multiparty/flowchart-nobg.png)
+![alt](https://bytearcher.com/articles/formidable-vs-busboy-vs-multer-vs-multiparty/flowchart-nobg.png)
 ([記事](https://bytearcher.com/articles/formidable-vs-busboy-vs-multer-vs-multiparty/)の画像を引用)
 
-## Firebase Strage へのアップロード
+### Firebase Strage へのアップロード
 
 busboy はファイルをストリーム形式で受け取ることができます。
 
@@ -302,7 +302,7 @@ https://firebase.google.com/docs/functions/tips?hl=ja#always_delete_temporary_fi
 >
 > パイプラインを使用して、サイズの大きいファイルを処理する際のメモリ要件を減らすことができます。たとえば、Cloud Storage でファイルを処理するために、読み取りストリームを作成し、これをストリームベースのプロセスに渡してから、出力ストリームを Cloud Storage に直接書き込むことができます。
 
-## 実装方法
+### Firebase Functions 側の実装方法
 
 Firebase Functionsでの実装例を以下に示します。
 
@@ -334,7 +334,7 @@ export const fileupload = onRequest({ timeoutSeconds: 300, cors: true }, (req, r
 
 アップロード処理には `stream.pipe(distPath.createWriteStream())` を使用することで、中間ファイルやメモリを挟まず、効率的にファイルを保存することができます。
 
-# まとめ
+## まとめ
 
 - FlutterとFirebaseを組み合わせたアプリ開発において、クライアントからFirebase Storageへ直接アップロードするとセキュリティリスクがあるため、Firebase Functionsを経由してアップロードを行う方法を検討しました。
 - ファイルアップロード方法としては「multipart/form-data」と「Base64 エンコード」の2つが主流で、今回は前者を採用しました。
