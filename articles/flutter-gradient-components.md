@@ -565,3 +565,11 @@ class MyAppState extends State<MyApp> {
 ### DartPad
 
 https://dartpad.dev/?id=af177df8eb760249cae61a2ceb7421c8
+
+## 終わりに
+
+暗記カードアプリを個人開発しているので、よろしければ使ってみてください。
+
+https://flash-pdf-card.web.app/
+
+まだデモ版なので感想お待ちしております。
